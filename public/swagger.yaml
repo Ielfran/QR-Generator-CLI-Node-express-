@@ -1,0 +1,151 @@
+ggqrapi: 1.0.0
+info:
+  title: QR Code Generator API
+  version: 1.0.0
+  description: A REST API for generating QR codes with customizable options
+servers:
+  - url: http://localhost:3000
+paths:
+  /qr:
+    get:
+      summary: Generate a QR code
+      parameters:
+        - in: query
+          name: data
+          required: true
+          schema:
+            type: string
+          description: Data to encode in the QR code
+        - in: query
+          name: size
+          schema:
+            type: integer
+            minimum: 100
+            maximum: 1000
+            default: 200
+          description: QR code size in pixels
+        - in: query
+          name: margin
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 10
+            default: 1
+          description: Margin around the QR code
+        - in: query
+          name: colorDark
+          schema:
+            type: string
+            pattern: '^#[0-9a-fA-F]{6}$'
+            default: '#000000'
+          description: Dark color for QR code
+        - in: query
+          name: colorLight
+          schema:
+            type: string
+            pattern: '^#[0-9a-fA-F]{6}$'
+            default: '#ffffff'
+          description: Light (background) color for QR code
+        - in: query
+          name: format
+          schema:
+            type: string
+            enum: [png, svg, jpeg, webp]
+            default: png
+          description: Output format of the QR code
+        - in: query
+          name: errorCorrection
+          schema:
+            type: string
+            enum: [L, M, Q, H]
+            default: M
+          description: Error correction level
+        - in: query
+          name: logo
+          schema:
+            type: string
+            format: uri
+          description: Optional URL for a logo to embed in the QR code
+      responses:
+        '200':
+          description: QR code image
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/webp:
+              schema:
+                type: string
+                format: binary
+            image/svg+xml:
+              schema:
+                type: string
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /qr/metadata:
+    get:
+      summary: Get QR code metadata
+      responses:
+        '200':
+          description: QR code metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  maxDataLength:
+                    type: object
+                    properties:
+                      L:
+                        type: integer
+                      M:
+                        type: integer
+                      Q:
+                        type: integer
+                      H:
+                        type: integer
+                  supportedFormats:
+                    type: array
+                    items:
+                      type: string
+                  supportedErrorCorrection:
+                    type: array
+                    items:
+                      type: string
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+        error:
+          type: string
+        errorCode:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
