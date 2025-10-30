@@ -1,2 +1,5 @@
 {"level":"info","message":"Server is running on port 3000","timestamp":"2025-07-22 22:38:43"}
 {"level":"info","message":"GET /api/v1/qrcode?data=https://example.com from ::1","timestamp":"2025-07-23 00:05:05"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-10-16 23:15:07"}
+{"level":"info","message":"GET /api/v1/qrcode?data=https://example.com from ::1","timestamp":"2025-10-16 23:15:09"}
+{"level":"info","message":"GET /api/v1/qrcode?data=https://example.com from ::1","timestamp":"2025-10-16 23:15:22"}
